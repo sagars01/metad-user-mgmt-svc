@@ -5,7 +5,6 @@ const { google } = require('googleapis');
 const app = express();
 const port = process.env.PORT || 8080;
 
-const projectId = process.env.GOOGLE_CLOUD_PROJECT;
 const zone = process.env.FUNCTION_REGION ? `${process.env.FUNCTION_REGION}-b` : 'us-central1-b';
 
 const auth = new GoogleAuth({
@@ -13,6 +12,12 @@ const auth = new GoogleAuth({
 });
 
 app.get('/', async (req, res) => {
+    const projectId = req.query.projectId;
+
+    if (!projectId) {
+        return res.status(400).send('Error: projectId query parameter is required');
+    }
+
     try {
         const compute = google.compute({ version: 'v1', auth });
 
@@ -47,7 +52,7 @@ app.get('/', async (req, res) => {
             ],
         };
 
-        console.log(`Creating instance ${instanceName} in ${zone}...`);
+        console.log(`Creating instance ${instanceName} in ${zone} for project ${projectId}...`);
         const [response] = await compute.instances.insert({
             project: projectId,
             zone,
@@ -68,7 +73,7 @@ app.get('/', async (req, res) => {
 
         const ipAddress = instance.data.networkInterfaces[0].accessConfigs[0].natIP;
 
-        res.send(`VM created successfully. IP Address: ${ipAddress}`);
+        res.send(`VM created successfully in project ${projectId}. IP Address: ${ipAddress}`);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send(`Error creating VM: ${error.message}`);
