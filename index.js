@@ -5,7 +5,7 @@ const { google } = require('googleapis');
 const app = express();
 const port = process.env.PORT || 8080;
 
-const zone = process.env.FUNCTION_REGION ? `${process.env.FUNCTION_REGION}-b` : 'us-east1';
+const zone = process.env.FUNCTION_REGION ? `${process.env.FUNCTION_REGION}-b` : 'us-east1-b';
 
 const auth = new GoogleAuth({
     scopes: ['https://www.googleapis.com/auth/cloud-platform']
