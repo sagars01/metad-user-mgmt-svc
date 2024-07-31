@@ -22,7 +22,7 @@ app.get('/', async (req, res) => {
         const compute = google.compute({ version: 'v1', auth });
 
         const machineType = `zones/${zone}/machineTypes/n1-standard-1`;
-        const sourceImage = 'projects/debian-cloud/global/images/family/debian-10';
+        const sourceImage = 'projects/debian-cloud/global/images/family/debian-11';
         const networkName = 'global/networks/default';
 
         const instanceName = `vm-${Date.now()}`;
